@@ -11,6 +11,17 @@ a {
   text-decoration: none;
 }
 
-* {
-  box-sizing: border-box;
+:root{
+  --1st:#232E21;
+  --2nd:#730071;
+  --3rd:#390040;
+
+  --4th:#C9C9C9;
+  --5th:#a3a3a3;
+}
+
+*{
+	margin:0;
+	padding:0;
+	box-sizing: border-box;
 }

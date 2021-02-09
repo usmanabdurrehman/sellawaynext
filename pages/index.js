@@ -1,65 +1,44 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import React, { useState, useEffect } from "react";
+import styles from "../styles/home.module.css";
+import Layout from "../layout/layout";
+import Card from "../components/Card/Card";
+import CardContainer from "../components/CardContainer/CardContainer";
+import Container from "../components/Container/Container";
+import axios from "axios";
 
-export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+export default function Home({items}) {
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+	return (
+		<Layout>
+			<div className={styles.heroWrapper}>
+				<Container className={styles.verticalAlignCenter}>
+					<h1>Your all in one stop for selling used items</h1>
+					<p>Not registered to the site?</p>
+					<p>
+						<a>Sign up</a> now and get an exclusive discount of 10$
+						on your first purchase or sale.
+					</p>
+				</Container>
+			</div>
+			<Container>
+				<CardContainer>
+					{items.map((item) => (
+						<Card item={item} />
+					))}
+				</CardContainer>
+			</Container>
+		</Layout>
+	);
+}
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+export async function getServerSideProps(context) {
+	let res = await axios({
+		url: "http://localhost:7000/user/getInitialItems",
+		withCredentials: true,
+	})
+	let items = res.data.status ? res.data.items : []
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+	return {
+		props: { items }, // will be passed to the page component as props
+	};
 }
